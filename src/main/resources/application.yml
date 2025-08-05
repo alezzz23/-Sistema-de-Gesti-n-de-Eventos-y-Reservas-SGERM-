@@ -1,0 +1,209 @@
+# Configuración del Sistema de Gestión de Eventos y Reservas (SGERM)
+spring:
+  application:
+    name: sgerm-event-management
+  
+  # Configuración de Base de Datos
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sgerm_db
+    username: sgerm_user
+    password: sgerm_password
+    driver-class-name: org.postgresql.Driver
+  
+  # Configuración JPA/Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  # Configuración de Redis (Cache)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+  
+  # Configuración de Email
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME:tu-email@gmail.com}
+    password: ${EMAIL_PASSWORD:tu-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  
+  # Configuración de Thymeleaf
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+  
+  # Configuración de archivos estáticos
+  web:
+    resources:
+      static-locations: classpath:/static/
+  
+  # Configuración de subida de archivos
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# Configuración del servidor
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Configuración de logging
+logging:
+  level:
+    com.sgerm: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/sgerm.log
+
+# Configuración personalizada de la aplicación
+sgerm:
+  app:
+    name: "Sistema de Gestión de Eventos y Reservas"
+    version: "1.0.0"
+    description: "Plataforma completa para gestión de eventos y reservas"
+  
+  # Configuración de seguridad
+  security:
+    jwt:
+      secret: ${JWT_SECRET:sgerm-super-secret-key-2024}
+      expiration: 86400000 # 24 horas en milisegundos
+  
+  # Configuración de archivos
+  files:
+    upload-dir: uploads/
+    max-size: 10MB
+    allowed-types: jpg,jpeg,png,pdf,doc,docx
+  
+  # Configuración de QR
+  qr:
+    width: 300
+    height: 300
+    format: PNG
+  
+  # Configuración de eventos
+  events:
+    max-capacity: 10000
+    booking-deadline-hours: 2
+    cancellation-deadline-hours: 24
+  
+  # Configuración de notificaciones
+notifications:
+  email:
+    enabled: true
+    from: "noreply@sgerm.com"
+  sms:
+    enabled: false
+    provider: "twilio"
+
+# Configuración de la aplicación
+app:
+  name: "SGERM"
+  base-url: "http://localhost:8080"
+
+---
+# Perfil de desarrollo
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+logging:
+  level:
+    root: INFO
+    com.sgerm: DEBUG
+
+---
+# Perfil de producción
+spring:
+  config:
+    activate:
+      on-profile: prod
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  
+  thymeleaf:
+    cache: true
+
+logging:
+  level:
+    root: WARN
+    com.sgerm: INFO
+
+---
+# Perfil para Docker
+spring:
+  config:
+    activate:
+      on-profile: docker
+  
+  datasource:
+    url: jdbc:postgresql://postgres:5432/sgerm_db
+    username: sgerm_user
+    password: sgerm_password
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  data:
+    redis:
+      host: redis
+      port: 6379
+      timeout: 2000ms
+
+app:
+  base-url: "http://localhost:8080"
+
+logging:
+  level:
+    root: INFO
+    com.sgerm: DEBUG
+  file:
+    name: /var/log/sgerm/application.log

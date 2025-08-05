@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: sgerm-postgres
+    environment:
+      POSTGRES_DB: sgerm_db
+      POSTGRES_USER: sgerm_user
+      POSTGRES_PASSWORD: sgerm_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - sgerm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sgerm_user -d sgerm_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Aplicación Spring Boot
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sgerm-app
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sgerm_db
+      SPRING_DATASOURCE_USERNAME: sgerm_user
+      SPRING_DATASOURCE_PASSWORD: sgerm_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - sgerm-network
+    restart: unless-stopped
+
+  # Redis para caché (opcional)
+  redis:
+    image: redis:7-alpine
+    container_name: sgerm-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - sgerm-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  sgerm-network:
+    driver: bridge
