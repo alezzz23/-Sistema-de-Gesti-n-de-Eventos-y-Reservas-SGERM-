@@ -2,7 +2,7 @@
 
 ## 📋 Descripción
 
-SGERM es un sistema completo para la gestión de eventos, reservas y venta de entradas desarrollado con Spring Boot. El sistema permite a los organizadores crear y gestionar eventos, mientras que los usuarios pueden realizar reservas y comprar entradas de manera eficiente.
+SGERM es una aplicación REST API para la gestión integral de eventos y reservas, desarrollada con Spring Boot, que permite administrar usuarios, eventos, reservas y recursos de manera eficiente a través de endpoints REST.
 
 ## 🏗️ Arquitectura del Proyecto
 
@@ -38,33 +38,44 @@ src/main/java/com/sgerm/eventmanagement/
 
 ### ✅ Funcionalidades Implementadas
 
+#### 🔌 API REST Completa
+- ✅ Endpoints para todas las operaciones CRUD
+- ✅ Documentación de API integrada
+- ✅ Respuestas en formato JSON
+- ✅ Manejo de errores estandarizado
+
 #### 👥 Gestión de Usuarios
-- ✅ Registro y autenticación de usuarios
+- ✅ Registro y autenticación de usuarios vía API
 - ✅ Gestión de perfiles y roles (USER, ORGANIZER, ADMIN)
 - ✅ Verificación de email y recuperación de contraseña
 - ✅ Sistema de notificaciones
 
 #### 🎪 Gestión de Eventos
-- ✅ Creación y edición de eventos
+- ✅ API para creación y edición de eventos
 - ✅ Categorización de eventos
 - ✅ Control de capacidad y disponibilidad
 - ✅ Estados de eventos (DRAFT, PUBLISHED, CANCELLED, COMPLETED)
 
 #### 🎫 Sistema de Reservas
-- ✅ Reserva de entradas con códigos únicos
+- ✅ API para reserva de entradas con códigos únicos
 - ✅ Estados de reserva (PENDING, CONFIRMED, CANCELLED, COMPLETED)
 - ✅ Generación de códigos QR
 - ✅ Sistema de check-in
 
 #### 🛠️ Gestión de Recursos
-- ✅ Administración de recursos para eventos
+- ✅ API para administración de recursos para eventos
 - ✅ Control de inventario y costos
 - ✅ Asignación de responsables
 
 #### 📧 Sistema de Notificaciones
-- ✅ Notificaciones por email
+- ✅ API para notificaciones por email
 - ✅ Diferentes tipos y prioridades
 - ✅ Plantillas HTML con Thymeleaf
+
+#### 🌐 Interfaz Web Simple
+- ✅ Página de información del sistema
+- ✅ Documentación de endpoints disponibles
+- ✅ Acceso a herramientas de desarrollo (H2 Console, Actuator)
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -76,6 +87,9 @@ src/main/java/com/sgerm/eventmanagement/
 - **Email**: Spring Mail + Thymeleaf
 - **Documentos**: iText PDF, Apache POI (Excel)
 - **QR Codes**: ZXing
+- **API Documentation**: Interfaz web simple para documentación
+- **Templates**: Thymeleaf (para páginas informativas)
+- **Containerización**: Docker & Docker Compose
 - **Java**: OpenJDK 17+
 
 ## 📋 Prerrequisitos
